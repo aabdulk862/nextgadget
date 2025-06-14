@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Android TV",
+    "category": "TV and Video",
+    "price": 499.99,
+    "stock": 20,
+    "imageUrl": "https://i.imgur.com/uLTGMoM.png"
+  },
+  {
+    "name": "HD Flatscreen TV",
+    "category": "TV and Video",
+    "price": 399.99,
+    "stock": 15,
+    "imageUrl": "https://i.imgur.com/LEpzxEp.png"
+  },
+  {
+    "name": "Vintage TV",
+    "category": "TV and Video",
+    "price": 250.0,
+    "stock": 5,
+    "imageUrl": "https://i.imgur.com/2NMGoeI.png"
+  },
+  {
+    "name": "Samsung TV",
+    "category": "TV and Video",
+    "price": 799.99,
+    "stock": 10,
+    "imageUrl": "https://i.imgur.com/LYdbrYg.png"
+  },
+  {
+    "name": "Apple iMac",
+    "category": "Computers",
+    "price": 1299.99,
+    "stock": 8,
+    "imageUrl": "https://i.imgur.com/BjYMIVz.png"
+  },
+  {
+    "name": "Dell Laptop",
+    "category": "Computers",
+    "price": 899.99,
+    "stock": 12,
+    "imageUrl": "https://i.imgur.com/JwrUP8P.png"
+  },
+  {
+    "name": "Microsoft Surface",
+    "category": "Computers",
+    "price": 999.99,
+    "stock": 10,
+    "imageUrl": "https://i.imgur.com/4ILXOhL.png"
+  },
+  {
+    "name": "MacBook Pro",
+    "category": "Computers",
+    "price": 1499.99,
+    "stock": 7,
+    "imageUrl": "https://i.imgur.com/9HFAm8V.png"
+  },
+  {
+    "name": "Black Wireless Headphones",
+    "category": "Audio",
+    "price": 199.99,
+    "stock": 25,
+    "imageUrl": "https://i.imgur.com/3CJEEsL.png"
+  },
+  {
+    "name": "Gray Wireless Headphones",
+    "category": "Audio",
+    "price": 179.99,
+    "stock": 30,
+    "imageUrl": "https://i.imgur.com/EpqdTMw.png"
+  },
+  {
+    "name": "Pink Wireless Beats",
+    "category": "Audio",
+    "price": 219.99,
+    "stock": 20,
+    "imageUrl": "https://i.imgur.com/QYM8aU8.png"
+  },
+  {
+    "name": "Apple Air Pods",
+    "category": "Audio",
+    "price": 249.99,
+    "stock": 18,
+    "imageUrl": "https://i.imgur.com/M0Hb63J.png"
+  },
+  {
+    "name": "Xbox One",
+    "category": "Gaming",
+    "price": 299.99,
+    "stock": 15,
+    "imageUrl": "https://i.imgur.com/F2YMA70.png"
+  },
+  {
+    "name": "PlayStation 5",
+    "category": "Gaming",
+    "price": 499.99,
+    "stock": 10,
+    "imageUrl": "https://i.imgur.com/syRN0IT.png"
+  },
+  {
+    "name": "Nintendo Switch",
+    "category": "Gaming",
+    "price": 299.99,
+    "stock": 14,
+    "imageUrl": "https://i.imgur.com/B62QSTU.png"
+  },
+  {
+    "name": "Xbox & PlayStation Controllers",
+    "category": "Gaming",
+    "price": 59.99,
+    "stock": 40,
+    "imageUrl": "https://i.imgur.com/csNQI2B.png"
+  },
+  {
+    "name": "iPhone X",
+    "category": "Phones",
+    "price": 699.99,
+    "stock": 20,
+    "imageUrl": "https://i.imgur.com/BSrSmTp.png"
+  },
+  {
+    "name": "Samsung Galaxy",
+    "category": "Phones",
+    "price": 799.99,
+    "stock": 18,
+    "imageUrl": "https://i.imgur.com/L1biU7Y.png"
+  },
+  {
+    "name": "Sony Android",
+    "category": "Phones",
+    "price": 599.99,
+    "stock": 25,
+    "imageUrl": "https://i.imgur.com/9xOdubM.png"
+  },
+  {
+    "name": "Vintage Rotary Phone",
+    "category": "Phones",
+    "price": 120.0,
+    "stock": 7,
+    "imageUrl": "https://i.imgur.com/iTIYq1m.png"
+  }
+]
