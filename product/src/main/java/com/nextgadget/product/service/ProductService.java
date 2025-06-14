@@ -5,6 +5,7 @@ import com.nextgadget.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -27,5 +28,33 @@ public class ProductService {
 
     public List<Product> search(String category) {
         return productRepository.findByCategoryContainingIgnoreCase(category);
+    }
+
+    // ✅ Update product details by ID
+    public Product updateProduct(Long id, Product updatedProduct) {
+        Optional<Product> existing = productRepository.findById(id);
+        if (existing.isPresent()) {
+            Product product = existing.get();
+            product.setName(updatedProduct.getName());
+            product.setCategory(updatedProduct.getCategory());
+            product.setPrice(updatedProduct.getPrice());
+            product.setStock(updatedProduct.getStock());
+            product.setImageUrl(
+                    updatedProduct.getImageUrl() == null || updatedProduct.getImageUrl().isBlank()
+                            ? product.getImageUrl()
+                            : updatedProduct.getImageUrl()
+            );
+            return productRepository.save(product);
+        } else {
+            throw new RuntimeException("Product with ID " + id + " not found");
+        }
+    }
+
+    // ✅ Delete discontinued product by ID
+    public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new RuntimeException("Product with ID " + id + " not found");
+        }
+        productRepository.deleteById(id);
     }
 }
