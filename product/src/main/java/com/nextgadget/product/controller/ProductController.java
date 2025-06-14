@@ -1,5 +1,6 @@
 package com.nextgadget.product.controller;
 
+import com.nextgadget.product.dto.ProductUpdateDTO;
 import com.nextgadget.product.entity.Product;
 import com.nextgadget.product.service.ProductService;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody Product product) {
+    public Product update(@PathVariable Long id, @RequestBody ProductUpdateDTO product) {
         return productService.updateProduct(id, product);
     }
 

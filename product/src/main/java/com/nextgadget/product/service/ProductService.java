@@ -1,11 +1,11 @@
 package com.nextgadget.product.service;
 
+import com.nextgadget.product.dto.ProductUpdateDTO;
 import com.nextgadget.product.entity.Product;
 import com.nextgadget.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -31,24 +31,27 @@ public class ProductService {
     }
 
     // ✅ Update product details by ID
-    public Product updateProduct(Long id, Product updatedProduct) {
-        Optional<Product> existing = productRepository.findById(id);
-        if (existing.isPresent()) {
-            Product product = existing.get();
-            product.setName(updatedProduct.getName());
-            product.setCategory(updatedProduct.getCategory());
-            product.setPrice(updatedProduct.getPrice());
-            product.setStock(updatedProduct.getStock());
-            product.setImageUrl(
-                    updatedProduct.getImageUrl() == null || updatedProduct.getImageUrl().isBlank()
-                            ? product.getImageUrl()
-                            : updatedProduct.getImageUrl()
-            );
+    public Product updateProduct(Long id, ProductUpdateDTO updateDto) {
+        return productRepository.findById(id).map(product -> {
+            if (updateDto.getName() != null && !updateDto.getName().isBlank()) {
+                product.setName(updateDto.getName());
+            }
+            if (updateDto.getCategory() != null && !updateDto.getCategory().isBlank()) {
+                product.setCategory(updateDto.getCategory());
+            }
+            if (updateDto.getPrice() != null) {
+                product.setPrice(updateDto.getPrice());  // assuming Product.price is also Double
+            }
+            if (updateDto.getStock() != null) {
+                product.setStock(updateDto.getStock());
+            }
+            if (updateDto.getImageUrl() != null && !updateDto.getImageUrl().isBlank()) {
+                product.setImageUrl(updateDto.getImageUrl());
+            }
             return productRepository.save(product);
-        } else {
-            throw new RuntimeException("Product with ID " + id + " not found");
-        }
+        }).orElseThrow(() -> new RuntimeException("Product with ID " + id + " not found"));
     }
+
 
     // ✅ Delete discontinued product by ID
     public void deleteProduct(Long id) {
