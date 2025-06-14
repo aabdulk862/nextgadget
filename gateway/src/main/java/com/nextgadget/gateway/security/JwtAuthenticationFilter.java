@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Component
 public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
@@ -21,6 +23,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
         String path = exchange.getRequest().getPath().toString();
         HttpMethod method = exchange.getRequest().getMethod();
 
+        // Allow unauthenticated access to GETs and auth endpoints
         if (
                 method == HttpMethod.GET ||
                         path.matches(".*/auth.*") ||
@@ -38,9 +41,19 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
         try {
             String token = authHeader.substring(7);
             jwtService.validateToken(token);
+
             String userId = jwtService.extractUserId(token);
-            exchange.getRequest().mutate().header("X-User-Id", userId).build();
-            return chain.filter(exchange);
+            List<String> roles = jwtService.extractRoles(token);
+
+            // Inject userId and roles as headers for downstream services (optional)
+            ServerWebExchange mutatedExchange = exchange.mutate()
+                    .request(r -> r.headers(headers -> {
+                        headers.set("X-User-Id", userId);
+                        headers.set("X-User-Roles", String.join(",", roles));
+                    }))
+                    .build();
+
+            return chain.filter(mutatedExchange);
         } catch (Exception ex) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
@@ -49,6 +62,6 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return -1; // Ensures it's one of the first filters
+        return -1; // Make sure this filter runs early
     }
 }

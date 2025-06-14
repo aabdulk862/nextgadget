@@ -19,6 +19,9 @@ public class ProductService {
     }
 
     public Product save(Product product) {
+        if (product.getImageUrl() == null || product.getImageUrl().isBlank()) {
+            product.setImageUrl("https://i.imgur.com/RqnGoSd.png");
+        }
         return productRepository.save(product);
     }
 

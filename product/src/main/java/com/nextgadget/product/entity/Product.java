@@ -24,7 +24,7 @@ public class Product {
     private Integer stock;
 
     @Column(name = "image_url")
-    private String imageUrl;
+    private String imageUrl = "https://i.imgur.com/RqnGoSd.png";
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
