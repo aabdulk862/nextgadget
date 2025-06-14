@@ -48,12 +48,13 @@
 ```
 nextgadget/
 ├── frontend/                 # React UI
-├── api-gateway/             # API Gateway (Spring Cloud)
-├── product-service/         # Product management
-├── user-service/            # User registration and login
-├── order-service/           # Order placement and tracking
-├── notification-service/    # Notification microservice
-├── docker-compose.yml       # Local dev orchestration
+├── gateway/                  # API Gateway (Spring Cloud)
+├── product/                  # Product management
+├── user/                     # User registration and login
+├── order/                    # Order placement and tracking
+├── notification-service/     # Notification microservice
+├── eureka/                   # Service Registry
+├── docker-compose.yml        # Local dev orchestration
 └── README.md
 ```
 
@@ -105,12 +106,9 @@ Backend gateway at: `http://localhost:8080`
 
 ## 👨‍💻 Author
 
-Built by [Your Name]  
-📧 [your.email@example.com]  
+Built by Adam Abdulkadir
+📧 [adama1862@outlook.com]  
 💼 Infosys | Full-Stack Developer
 
 ---
 
-## 🪪 License
-
-MIT License – free to use and modify.
