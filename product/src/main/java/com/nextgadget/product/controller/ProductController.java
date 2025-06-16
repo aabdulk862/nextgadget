@@ -3,6 +3,7 @@ package com.nextgadget.product.controller;
 import com.nextgadget.product.dto.ProductUpdateDTO;
 import com.nextgadget.product.entity.Product;
 import com.nextgadget.product.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
-
+    @Autowired
     public ProductController(ProductService service) {
         this.productService = service;
     }

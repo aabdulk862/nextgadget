@@ -3,6 +3,7 @@ package com.nextgadget.user.controller;
 import com.nextgadget.user.dto.LoginRequest;
 import com.nextgadget.user.entity.User;
 import com.nextgadget.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
