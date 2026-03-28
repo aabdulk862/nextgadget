@@ -4,8 +4,10 @@ import com.nextgadget.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -17,8 +19,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Return user roles/authorities if you have them; empty list for now
-        return Collections.emptyList();
+        return List.of(new SimpleGrantedAuthority(user.getRole()));
     }
 
     @Override

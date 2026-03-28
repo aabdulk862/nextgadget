@@ -3,6 +3,7 @@ package com.nextgadget.product.controller;
 import com.nextgadget.product.dto.ProductUpdateDTO;
 import com.nextgadget.product.entity.Product;
 import com.nextgadget.product.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,13 +50,13 @@ public class ProductController {
 
     // ✅ Create a new product (admin)
     @PostMapping
-    public Product create(@RequestBody Product product) {
+    public Product create(@Valid @RequestBody Product product) {
         return productService.save(product);
     }
 
     // ✅ Update a product (admin)
     @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody ProductUpdateDTO product) {
+    public Product update(@PathVariable Long id, @Valid @RequestBody ProductUpdateDTO product) {
         return productService.updateProduct(id, product);
     }
 

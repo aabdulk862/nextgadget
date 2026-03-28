@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,11 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,55 +31,64 @@ public class SecurityConfig {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
+    private SecretKey key;
+
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
+
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-                .csrf().disable()
-                .authorizeExchange()
-                // Public endpoints
-                .pathMatchers("/api/users/register", "/api/users/login").permitAll()
-                .pathMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-
-                // Admin-only product management
-                .pathMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
-                .pathMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
-                .pathMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
-
-                // All other endpoints require authentication
-                .anyExchange().authenticated()
-                .and()
+                .csrf(csrf -> csrf.disable())
+                .authorizeExchange(exchanges -> exchanges
+                        // Public endpoints
+                        .pathMatchers("/api/users/register", "/api/users/login").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/notifications/**").permitAll()
+                        // Admin-only product management
+                        .pathMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+                        // All other endpoints require authentication
+                        .anyExchange().authenticated()
+                )
                 .addFilterAt(jwtAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
 
-    public AuthenticationWebFilter jwtAuthenticationFilter() {
-        Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
-
+    private AuthenticationWebFilter jwtAuthenticationFilter() {
         AuthenticationWebFilter filter = new AuthenticationWebFilter(reactiveAuthenticationManager());
-        filter.setServerAuthenticationConverter(exchange -> {
+        filter.setServerAuthenticationConverter(jwtAuthenticationConverter());
+        return filter;
+    }
+
+    private ServerAuthenticationConverter jwtAuthenticationConverter() {
+        return exchange -> {
             String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                System.out.println("Missing or invalid Authorization header");
                 return Mono.empty();
             }
 
             String token = authHeader.substring(7);
             try {
-                Claims claims = Jwts.parserBuilder()
-                        .setSigningKey(key)
+                Claims claims = Jwts.parser()
+                        .verifyWith(key)
                         .build()
-                        .parseClaimsJws(token)
-                        .getBody();
+                        .parseSignedClaims(token)
+                        .getPayload();
 
                 String username = claims.getSubject();
+                String userId = username; // subject holds the username/userId
+
                 Object rolesClaim = claims.get("roles");
                 if (rolesClaim == null) {
-                    rolesClaim = claims.get("role"); // Fallback if "roles" is missing
+                    rolesClaim = claims.get("role");
                 }
 
                 List<String> roles;
-
                 if (rolesClaim instanceof String) {
                     roles = List.of(((String) rolesClaim).split(","));
                 } else if (rolesClaim instanceof List<?>) {
@@ -87,31 +99,52 @@ public class SecurityConfig {
                     roles = List.of();
                 }
 
-                System.out.println("Token: " + token);
-                System.out.println("Username: " + username);
-                System.out.println("Roles list: " + roles);
-
                 List<SimpleGrantedAuthority> authorities = roles.stream()
                         .map(role -> new SimpleGrantedAuthority(role.trim()))
                         .collect(Collectors.toList());
 
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, token, authorities);
+                // Store userId and roles as exchange attributes for header mutation
+                exchange.getAttributes().put("X-User-Id", userId);
+                exchange.getAttributes().put("X-User-Roles", String.join(",", roles));
+
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(username, token, authorities);
                 return Mono.just(auth);
 
             } catch (JwtException e) {
-                System.out.println("JWT Exception: " + e.getMessage());
                 return Mono.empty();
             }
-        });
-
-        return filter;
+        };
     }
 
     @Bean
     public ReactiveAuthenticationManager reactiveAuthenticationManager() {
-        return authentication -> {
+        return authentication -> Mono.just(authentication);
+    }
 
-            return Mono.just(authentication);
+    /**
+     * GlobalFilter that mutates the request to inject X-User-Id and X-User-Roles
+     * headers for downstream services after JWT authentication.
+     */
+    @Bean
+    public org.springframework.cloud.gateway.filter.GlobalFilter userHeaderGlobalFilter() {
+        return (exchange, chain) -> {
+            String userId = exchange.getAttribute("X-User-Id");
+            String userRoles = exchange.getAttribute("X-User-Roles");
+
+            if (userId != null) {
+                ServerWebExchange mutatedExchange = exchange.mutate()
+                        .request(r -> r.headers(headers -> {
+                            headers.set("X-User-Id", userId);
+                            if (userRoles != null) {
+                                headers.set("X-User-Roles", userRoles);
+                            }
+                        }))
+                        .build();
+                return chain.filter(mutatedExchange);
+            }
+
+            return chain.filter(exchange);
         };
     }
 }

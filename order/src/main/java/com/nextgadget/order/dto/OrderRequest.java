@@ -1,9 +1,13 @@
 package com.nextgadget.order.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+
 import java.util.List;
 
 public class OrderRequest {
-    private List<OrderItemDTO> items;
+    @NotEmpty(message = "Order must contain at least one item")
+    private List<@Valid OrderItemDTO> items;
 
     public OrderRequest() {
     }

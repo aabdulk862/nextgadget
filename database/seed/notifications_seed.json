@@ -1,0 +1,37 @@
+[
+  {
+    "userId": "1",
+    "message": "Your order #1001 has been placed.",
+    "status": "unread",
+    "type": "ORDER_EVENT",
+    "createdAt": "2025-06-01T10:00:00Z"
+  },
+  {
+    "userId": "1",
+    "message": "Your order #1002 has been placed.",
+    "status": "read",
+    "type": "ORDER_EVENT",
+    "createdAt": "2025-06-02T14:30:00Z"
+  },
+  {
+    "userId": "2",
+    "message": "Your order #1003 has been placed.",
+    "status": "unread",
+    "type": "ORDER_EVENT",
+    "createdAt": "2025-06-03T09:15:00Z"
+  },
+  {
+    "userId": "2",
+    "message": "Your order #1004 has been placed.",
+    "status": "unread",
+    "type": "ORDER_EVENT",
+    "createdAt": "2025-06-04T16:45:00Z"
+  },
+  {
+    "userId": "3",
+    "message": "Your order #1005 has been placed.",
+    "status": "read",
+    "type": "ORDER_EVENT",
+    "createdAt": "2025-06-05T11:20:00Z"
+  }
+]

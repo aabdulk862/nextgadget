@@ -1,0 +1,81 @@
+:root {
+  --ng-accent: #77f2a1;
+  --ng-accent-dark: #5cd98a;
+  --ng-dark: #343a40;
+  --ng-font: 'Roboto', sans-serif;
+}
+
+body {
+  font-family: var(--ng-font);
+  margin: 0;
+  padding: 0;
+}
+
+/* Bootstrap overrides */
+.btn-primary {
+  background-color: var(--ng-accent);
+  border-color: var(--ng-accent);
+  color: var(--ng-dark);
+}
+
+.btn-primary:hover {
+  background-color: var(--ng-accent-dark);
+  border-color: var(--ng-accent-dark);
+  color: var(--ng-dark);
+}
+
+.btn-outline-primary {
+  color: var(--ng-accent);
+  border-color: var(--ng-accent);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--ng-accent);
+  border-color: var(--ng-accent);
+  color: var(--ng-dark);
+}
+
+/* Form input styling */
+.form-control {
+  border-radius: 25px;
+  padding: 0.6rem 1.2rem;
+}
+
+.form-control:focus {
+  border-color: var(--ng-accent);
+  box-shadow: 0 0 0 0.2rem rgba(119, 242, 161, 0.25);
+}
+
+/* Product card hover effects */
+.product-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Hero / feature section */
+.hero-section {
+  background-color: var(--ng-accent);
+  color: var(--ng-dark);
+}
+
+/* Footer */
+footer {
+  background-color: var(--ng-dark);
+  color: #ccc;
+}
+
+/* Loading spinner */
+.spinner-accent {
+  color: var(--ng-accent);
+}

@@ -29,6 +29,10 @@ spring:
               uri: lb://order-service
               predicates:
                 - Path=/api/orders/**
+            - id: notification-service
+              uri: http://notification:8084
+              predicates:
+                - Path=/api/notifications/**
 
 
 jwt:

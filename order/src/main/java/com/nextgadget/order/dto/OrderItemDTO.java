@@ -1,9 +1,15 @@
 package com.nextgadget.order.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class OrderItemDTO {
+    @NotNull(message = "Product ID must not be null")
     private Long productId;
+
+    @Positive(message = "Quantity must be a positive number")
     private Integer quantity;
     private BigDecimal unitPrice;
 

@@ -2,6 +2,7 @@ package com.nextgadget.product.service;
 
 import com.nextgadget.product.dto.ProductUpdateDTO;
 import com.nextgadget.product.entity.Product;
+import com.nextgadget.product.exception.ResourceNotFoundException;
 import com.nextgadget.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class ProductService {
     // ✅ Get a single product by ID
     public Product getById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product with ID " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID " + id + " not found"));
     }
 
     // ✅ Get only products that are in stock
@@ -75,14 +76,14 @@ public class ProductService {
                 product.setImageUrl(updateDto.getImageUrl());
             }
             return productRepository.save(product);
-        }).orElseThrow(() -> new RuntimeException("Product with ID " + id + " not found"));
+        }).orElseThrow(() -> new ResourceNotFoundException("Product with ID " + id + " not found"));
     }
 
 
     // ✅ Delete discontinued product by ID
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Product with ID " + id + " not found");
+            throw new ResourceNotFoundException("Product with ID " + id + " not found");
         }
         productRepository.deleteById(id);
     }

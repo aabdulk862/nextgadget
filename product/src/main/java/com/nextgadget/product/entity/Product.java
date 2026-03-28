@@ -1,6 +1,8 @@
 package com.nextgadget.product.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -13,11 +15,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Product name must not be blank")
     @Column(nullable = false)
     private String name;
 
     private String category;
 
+    @Positive(message = "Price must be a positive number")
     @Column(nullable = false)
     private Double price;
 
